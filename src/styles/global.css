@@ -1,0 +1,71 @@
+/* ================================================
+   OISHIGIRI - Global Styles
+   ================================================ */
+
+:root {
+  /* Brand Colors */
+  --color-primary: #e63946;       /* Red - brand utama */
+  --color-navy: #1a2744;          /* Dark Navy - background utama */
+  --color-navy-light: #1e2f52;    /* Navy lebih terang */
+  --color-white: #ffffff;
+  --color-off-white: #f4f4f2;
+  --color-gray-light: #d8d8d8;
+  --color-gray: #9a9a9a;
+  --color-green: #4caf50;         /* Tombol login */
+  --color-green-hover: #43a047;
+
+  /* Typography */
+  --font-display: 'Noto Serif JP', serif;   /* Brand / heading besar */
+  --font-body: 'Plus Jakarta Sans', sans-serif;
+
+  /* Spacing */
+  --nav-height: 80px;
+
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.12);
+  --shadow-md: 0 4px 20px rgba(0,0,0,0.2);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,0.3);
+
+  /* Transitions */
+  --transition: 0.2s ease;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-navy);
+  color: var(--color-white);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  outline: none;
+  font-family: var(--font-body);
+}
+
+input {
+  font-family: var(--font-body);
+  outline: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}

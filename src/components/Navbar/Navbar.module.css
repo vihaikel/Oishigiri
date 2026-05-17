@@ -1,0 +1,162 @@
+/* Navbar.module.css */
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  height: var(--nav-height);
+  background-color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  padding: 0 1.5rem;
+  gap: 2rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+}
+
+/* Logo */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.logoCircle {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  color: var(--color-navy);
+  font-weight: 600;
+}
+
+.brandName {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 1.1rem;
+  color: var(--color-navy);
+  letter-spacing: 0.05em;
+}
+
+/* Nav Links */
+.navLinks {
+  display: flex;
+  list-style: none;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.navLink {
+  display: inline-block;
+  padding: 0.45rem 1.1rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--color-white);
+  transition: background var(--transition);
+}
+
+.navLink:hover {
+  background: rgba(255,255,255,0.15);
+}
+
+.navLink.active {
+  background: var(--color-navy);
+  color: var(--color-white);
+}
+
+/* Right side */
+.navRight {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-left: auto;
+}
+
+.iconBtn {
+  background: none;
+  color: var(--color-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem;
+  border-radius: 6px;
+  transition: background var(--transition);
+}
+
+.iconBtn:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+.divider {
+  width: 1px;
+  height: 32px;
+  background: rgba(255,255,255,0.4);
+  margin: 0 0.25rem;
+}
+
+.loginBtn {
+  padding: 0.5rem 1.4rem;
+  border: 2px solid var(--color-white);
+  border-radius: 6px;
+  color: var(--color-white);
+  background: transparent;
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  transition: all var(--transition);
+}
+
+.loginBtn:hover {
+  background: var(--color-white);
+  color: var(--color-primary);
+}
+
+.registerBtn {
+  padding: 0.5rem 1.4rem;
+  border-radius: 6px;
+  background: var(--color-navy);
+  color: var(--color-white);
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  transition: background var(--transition);
+}
+
+.registerBtn:hover {
+  background: var(--color-navy-light);
+}
+
+/* User area (logged in) */
+.userArea {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.userName {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-white);
+}
+
+.logoutBtn {
+  padding: 0.5rem 1.2rem;
+  border-radius: 6px;
+  background: var(--color-navy);
+  color: var(--color-white);
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  transition: background var(--transition);
+}
+
+.logoutBtn:hover {
+  background: rgba(26,39,68,0.8);
+}

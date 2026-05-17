@@ -1,0 +1,228 @@
+/* Home.module.css */
+
+.page {
+  min-height: 100vh;
+  background: var(--color-navy);
+}
+
+/* Hero Banner */
+.heroBanner {
+  min-height: 100vh;
+  padding-top: var(--nav-height);
+  background: var(--color-navy);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.heroContent {
+  text-align: center;
+  z-index: 2;
+  position: relative;
+  padding: 2rem;
+  animation: fadeUp 0.8s ease both;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.heroSub {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--color-primary);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.heroTitle {
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 8vw, 6rem);
+  font-weight: 300;
+  color: rgba(255,255,255,0.85);
+  letter-spacing: 0.05em;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+}
+
+.heroDesc {
+  font-size: 1.1rem;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 2.5rem;
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.heroBtns {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btnPrimary {
+  padding: 0.85rem 2.2rem;
+  background: var(--color-primary);
+  color: white;
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.05em;
+  border-radius: 8px;
+  transition: all 0.2s;
+  font-family: var(--font-body);
+}
+
+.btnPrimary:hover {
+  background: #c72d3a;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(230,57,70,0.35);
+}
+
+.btnSecondary {
+  padding: 0.85rem 2.2rem;
+  background: transparent;
+  color: white;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-radius: 8px;
+  transition: all 0.2s;
+  font-family: var(--font-body);
+}
+
+.btnSecondary:hover {
+  border-color: white;
+  background: rgba(255,255,255,0.08);
+}
+
+/* Decorative */
+.heroDecor {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.circle1 {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(230,57,70,0.08) 0%, transparent 70%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.circle2 {
+  position: absolute;
+  width: 800px;
+  height: 800px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.04);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.onigiriSvg {
+  position: absolute;
+  right: 8%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 300px;
+  height: 300px;
+  opacity: 0.6;
+}
+
+/* Featured Section */
+.featuredSection {
+  padding: 5rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.sectionHeader {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.sectionHeader h2 {
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--color-white);
+  margin-bottom: 0.5rem;
+}
+
+.sectionHeader p {
+  color: rgba(255,255,255,0.5);
+  font-size: 1rem;
+}
+
+/* Product Grid */
+.productGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1.5rem;
+}
+
+.productCard {
+  background: var(--color-navy-light);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.08);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.productCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+}
+
+.cardImg {
+  height: 140px;
+  background: rgba(255,255,255,0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3.5rem;
+}
+
+.cardBody {
+  padding: 1rem;
+}
+
+.cardBody h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-white);
+  margin-bottom: 0.4rem;
+}
+
+.cardBody p {
+  font-size: 0.9rem;
+  color: var(--color-primary);
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.addBtn {
+  width: 100%;
+  padding: 0.5rem;
+  background: var(--color-primary);
+  color: white;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: var(--font-body);
+  transition: background 0.2s;
+}
+
+.addBtn:hover {
+  background: #c72d3a;
+}
