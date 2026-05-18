@@ -1,0 +1,164 @@
+/* Shop.module.css */
+
+.page {
+    min-height: 100vh;
+    padding: 5rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    background: var(--color-navy);
+}
+
+/* SHOP SECTION */
+.shopSection {
+    min-height: 100vh;
+    padding-top: var(--nav-height);
+    background: var(--color-navy);
+    position: relative;
+    overflow: hidden;
+}
+
+.container {
+    padding: 3rem 4rem;
+    position: relative;
+    z-index: 2;
+}
+
+/* TITLE */
+.title {
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 3rem;
+    font-family: var(--font-display);
+    text-align: center;
+}
+
+/* PRODUCT GRID */
+.productGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1.5rem;
+    justify-items: center;
+}
+
+/* PRODUCT CARD */
+.productCard {
+    width: 180px;
+    background: var(--color-navy-light);
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid rgba(255,255,255,0.08);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.productCard:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+    cursor: pointer;
+}
+
+/* HEART */
+.heartButton {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.heartIcon {
+    color: whitesmoke;
+    font-size: 1rem;
+}
+
+.heartActive {
+    color: var(--color-primary);
+    font-size: 1rem;
+}
+
+/* IMAGE */
+.productImage {
+    height: 150px;
+    background-color: rgba(255,255,255,0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    };
+    transition: 0.3s ease;
+}
+
+/* INFO */
+.productInfo {
+    padding: 1rem;
+}
+
+.productInfo h3 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--color-white);
+    margin-bottom: 0.4rem;
+}
+
+.productInfo p {
+    font-size: 0.9rem;
+    color: var(--color-primary);
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+}
+
+/* DECORATION */
+.topCircle {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    background: var(--color-primary);
+    border-radius: 50%;
+    top: 10px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.leftDecor {
+    position: absolute;
+    width: 360px;
+    height: 160px;
+    background-image: url('../../assets/images/stiker\ awan.png');
+    background-size: 360px 160px;
+    left: -150px;
+    top: 160px;
+    opacity: 0.9;
+}
+
+.rightDecor {
+    position: absolute;
+    width: 360px;
+    height: 170px;
+    background-image: url('../../assets/images/stiker\ awan.png');
+    background-size: 360px 170px;
+    right: -150px;
+    bottom: 140px;
+    opacity: 0.9;
+}
+
+/* RESPONSIVE */
+@media screen and (max-width: 768px) {
+    .container {
+        padding: 2rem;
+    }
+
+    .productGrid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 2rem;
+    }
+    
+    .productCard {
+        width: 150px;
+    }
+}
