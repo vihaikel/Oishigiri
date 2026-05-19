@@ -1,6 +1,7 @@
 import { useAuth } from '../../context/AuthContext';
 import Navbar from '../../components/Navbar';
 import styles from './Home.module.css';
+import bgHero from '../../assets/images/trialbanner.png';
 
 const Home = () => {
   const { user } = useAuth();
@@ -10,12 +11,12 @@ const Home = () => {
       <Navbar />
 
       {/* Hero Banner */}
-      <section className={styles.heroBanner}>
+      <section className={styles.heroBanner} style={{ backgroundImage: `url(${bgHero})` }}>
         <div className={styles.heroContent}>
-          <p className={styles.heroSub}>🍙 Freshly Made, Authentically Japanese</p>
-          <h1 className={styles.heroTitle}>Hero Banner</h1>
+          <p className={styles.heroSub}>🍙 Experience the taste of authentic Japanese onigiri</p>
+          <h1 className={styles.heroTitle}>Ready for a Bite?</h1>
           <p className={styles.heroDesc}>
-            Selamat datang{user ? `, ${user.name}` : ''}! Temukan berbagai onigiri lezat kami.
+            Hungry yet{user ? `, ${user.name}` : ''}? Let’s make your day better with fresh onigiri.
           </p>
           <div className={styles.heroBtns}>
             <button className={styles.btnPrimary}>Lihat Menu</button>
@@ -27,16 +28,19 @@ const Home = () => {
         <div className={styles.heroDecor}>
           <div className={styles.circle1}></div>
           <div className={styles.circle2}></div>
-          <svg className={styles.onigiriSvg} viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+
+
+         
+          {/* <svg className={styles.onigiriSvg} viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">  */}
             {/* Stylized onigiri shape */}
-            <path d="M100 20 C60 20, 20 60, 20 110 C20 150, 50 175, 100 175 C150 175, 180 150, 180 110 C180 60, 140 20, 100 20Z"
-              fill="white" opacity="0.08"/>
-            <path d="M100 30 C65 30, 30 65, 30 110 C30 148, 58 168, 100 168 C142 168, 170 148, 170 110 C170 65, 135 30, 100 30Z"
-              fill="none" stroke="white" strokeWidth="1.5" opacity="0.15"/>
+            {/* <path d="M100 20 C60 20, 20 60, 20 110 C20 150, 50 175, 100 175 C150 175, 180 150, 180 110 C180 60, 140 20, 100 20Z" */}
+              {/* fill="white" opacity="0.08"/> */}
+            {/* <path d="M100 30 C65 30, 30 65, 30 110 C30 148, 58 168, 100 168 C142 168, 170 148, 170 110 C170 65, 135 30, 100 30Z" */}
+              {/* fill="none" stroke="white" strokeWidth="1.5" opacity="0.15"/> */}
             {/* Nori strip */}
-            <rect x="45" y="120" width="110" height="35" rx="4" fill="#1a2744" opacity="0.5"/>
-            <text x="100" y="143" textAnchor="middle" fill="white" fontSize="13" opacity="0.4" fontFamily="serif">OISHIGIRI</text>
-          </svg>
+            {/* <rect x="45" y="120" width="110" height="35" rx="4" fill="#1a2744" opacity="0.5"/> */}
+            {/* <text x="100" y="143" textAnchor="middle" fill="white" fontSize="13" opacity="0.4" fontFamily="serif">OISHIGIRI</text> */}
+          {/* </svg>  */}
         </div>
       </section>
 
