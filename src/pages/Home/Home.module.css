@@ -6,7 +6,7 @@
 }
 
 /* Hero Banner */
-.heroBanner {
+/* .heroBanner { 
   min-height: 100vh;
   padding-top: var(--nav-height);
   background: var(--color-navy);
@@ -15,6 +15,32 @@
   justify-content: center;
   position: relative;
   overflow: hidden;
+}*/
+
+.heroBanner {
+  min-height: 100vh;
+
+  padding-top: var(--nav-height);
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  padding-right: 4%;
+
+  position: relative;
+  overflow: hidden;
+}
+
+.heroBanner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.15);
 }
 
 .heroContent {
@@ -23,6 +49,7 @@
   position: relative;
   padding: 2rem;
   animation: fadeUp 0.8s ease both;
+  margin-right: 40px;
 }
 
 @keyframes fadeUp {
@@ -41,12 +68,14 @@
 
 .heroTitle {
   font-family: var(--font-display);
-  font-size: clamp(3.5rem, 8vw, 6rem);
+  font-size: clamp(2.8rem, 6vw, 4.5rem);
   font-weight: 300;
   color: rgba(255,255,255,0.85);
   letter-spacing: 0.05em;
   line-height: 1.1;
   margin-bottom: 1.5rem;
+  line-height: 1.2;
+  letter-spacing: 0.03em;
 }
 
 .heroDesc {
@@ -129,6 +158,9 @@
   transform: translate(-50%, -50%);
 }
 
+
+
+/*  
 .onigiriSvg {
   position: absolute;
   right: 8%;
@@ -138,7 +170,7 @@
   height: 300px;
   opacity: 0.6;
 }
-
+*/
 /* Featured Section */
 .featuredSection {
   padding: 5rem 2rem;
