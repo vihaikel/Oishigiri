@@ -104,6 +104,9 @@
     font-weight: 600;
     color: var(--color-white);
     margin-bottom: 0.4rem;
+
+    min-height: 2.5rem;
+    line-height: 1.25rem;
 }
 
 .productInfo p {

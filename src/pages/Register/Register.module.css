@@ -1,4 +1,4 @@
-/* Login.module.css */
+/* Register.module.css */
 
 .page {
   display: flex;
@@ -29,13 +29,13 @@
   font-size: 1.6rem;
   color: var(--color-navy);
   letter-spacing: 0.2em;
-  margin-bottom: 2.5rem;
+  margin-bottom: 2rem;
 }
 
 .form {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.2rem;
 }
 
 .field {
@@ -80,7 +80,7 @@
   border-left: 3px solid var(--color-primary);
 }
 
-.loginBtn {
+.registerBtn {
   margin-top: 0.5rem;
   padding: 1rem;
   background: #4caf50;
@@ -94,50 +94,30 @@
   transition: background 0.2s, transform 0.2s;
 }
 
-.loginBtn:hover:not(:disabled) {
+.registerBtn:hover:not(:disabled) {
   background: #43a047;
   transform: translateY(-1px);
 }
 
-.loginBtn:disabled {
+.registerBtn:disabled {
   opacity: 0.7;
   cursor: not-allowed;
 }
 
-.registerLink {
+.loginLink {
   margin-top: 1.5rem;
   font-size: 0.9rem;
   color: var(--color-navy);
 }
 
-.registerLink a {
+.loginLink a {
   color: var(--color-primary);
   font-weight: 600;
   text-decoration: none;
 }
 
-.registerLink a:hover {
+.loginLink a:hover {
   text-decoration: underline;
-}
-
-.hint {
-  margin-top: 1.5rem;
-  padding: 0.9rem 1.2rem;
-  background: rgba(26,39,68,0.07);
-  border-radius: 8px;
-  border: 1px dashed rgba(26,39,68,0.2);
-}
-
-.hint p {
-  font-size: 0.85rem;
-  color: var(--color-navy);
-  margin-bottom: 0.35rem;
-}
-
-.hint code {
-  font-size: 0.8rem;
-  color: var(--color-primary);
-  font-weight: 600;
 }
 
 .illustrationPanel {

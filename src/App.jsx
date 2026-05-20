@@ -1,62 +1,53 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { CartProvider } from './context/CartContext';
+import { QueueProvider } from './context/QueueContext';
+import CartDrawer from './components/CartDrawer/CartDrawer';
 import './styles/global.css';
 
-// Pages
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Shop from './pages/Shop';
-import Wishlist from './pages/Wishlist';
 import About from './pages/About';
 import ProductDetail from './pages/ProductDetail';
-import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
-import OrderConfirmation from './pages/OrderConfirmation';
+import Antrian from './pages/OrderConfirmation';
+import History from './pages/History';
 
-// Route guard: halaman yang butuh login
 const ProtectedRoute = ({ children }) => {
   const { isLoggedIn } = useAuth();
   return isLoggedIn ? children : <Navigate to="/login" replace />;
 };
 
 const AppRoutes = () => (
-  <Routes>
-    {/* Public routes */}
-    <Route path="/login"    element={<Login />} />
-    <Route path="/register" element={<Register />} />
-    <Route path="/about"    element={<About />} />
-    <Route path="/shop"     element={<Shop />} />
+  <>
+    <CartDrawer />
+    <Routes>
+      <Route path="/login"    element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/about"    element={<About />} />
+      <Route path="/shop"     element={<Shop />} />
+      <Route path="/shop/:id" element={<ProductDetail />} />
+      <Route path="/antrian"  element={<Antrian />} />
 
-    {/* Protected routes */}
-    <Route path="/" element={
-      <ProtectedRoute><Home /></ProtectedRoute>
-    }/>
-    <Route path="/wishlist" element={
-      <ProtectedRoute><Wishlist /></ProtectedRoute>
-    }/>
-    <Route path="/product/:id" element={
-      <ProtectedRoute><ProductDetail /></ProtectedRoute>
-    }/>
-    <Route path="/cart" element={
-      <ProtectedRoute><Cart /></ProtectedRoute>
-    }/>
-    <Route path="/checkout" element={
-      <ProtectedRoute><Checkout /></ProtectedRoute>
-    }/>
-    <Route path="/order-confirmation" element={
-      <ProtectedRoute><OrderConfirmation /></ProtectedRoute>
-    }/>
+      <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+      <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
+      <Route path="/history"  element={<ProtectedRoute><History /></ProtectedRoute>} />
 
-    {/* Catch-all */}
-    <Route path="*" element={<Navigate to="/" replace />} />
-  </Routes>
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  </>
 );
 
 const App = () => (
   <BrowserRouter>
     <AuthProvider>
-      <AppRoutes />
+      <CartProvider>
+        <QueueProvider>
+          <AppRoutes />
+        </QueueProvider>
+      </CartProvider>
     </AuthProvider>
   </BrowserRouter>
 );

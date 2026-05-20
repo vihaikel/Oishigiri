@@ -1,5 +1,6 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useCart } from '../../context/CartContext';
 import styles from './Navbar.module.css';
 
 const SearchIcon = () => (
@@ -17,14 +18,18 @@ const CartIcon = () => (
 
 const Navbar = () => {
   const { user, logout, isLoggedIn } = useAuth();
+  const { openCart, totalItems } = useCart();
   const navigate = useNavigate();
   const location = useLocation();
+  const isKasir = user?.role === 'admin';
 
   const navLinks = [
     { label: 'Home', path: '/' },
     { label: 'Shop', path: '/shop' },
-    { label: 'Wishlist', path: '/wishlist' },
+    { label: 'Antrian', path: '/antrian' },
     { label: 'About', path: '/about' },
+    // History hanya muncul untuk kasir
+    ...(isKasir ? [{ label: 'History', path: '/history' }] : []),
   ];
 
   const handleLogout = () => {
@@ -34,7 +39,6 @@ const Navbar = () => {
 
   return (
     <nav className={styles.navbar}>
-      {/* Logo */}
       <Link to="/" className={styles.logo}>
         <div className={styles.logoCircle}>
           <span>Logo</span>
@@ -42,7 +46,6 @@ const Navbar = () => {
         <span className={styles.brandName}>OISHIGIRI</span>
       </Link>
 
-      {/* Nav Links */}
       <ul className={styles.navLinks}>
         {navLinks.map((link) => (
           <li key={link.path}>
@@ -56,22 +59,32 @@ const Navbar = () => {
         ))}
       </ul>
 
-      {/* Right Side */}
       <div className={styles.navRight}>
         <button className={styles.iconBtn} aria-label="Search">
           <SearchIcon />
         </button>
-        <Link to="/cart" className={styles.iconBtn} aria-label="Cart">
+
+        <button className={styles.iconBtn} aria-label="Cart" onClick={openCart} style={{ position: 'relative' }}>
           <CartIcon />
-        </Link>
+          {totalItems > 0 && (
+            <span style={{
+              position: 'absolute', top: '-4px', right: '-4px',
+              background: 'var(--color-primary)', color: 'white',
+              fontSize: '0.65rem', fontWeight: '700', borderRadius: '50%',
+              width: '16px', height: '16px',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              {totalItems}
+            </span>
+          )}
+        </button>
+
         <div className={styles.divider} />
 
         {isLoggedIn ? (
           <div className={styles.userArea}>
             <span className={styles.userName}>👋 {user.name}</span>
-            <button className={styles.logoutBtn} onClick={handleLogout}>
-              LOGOUT
-            </button>
+            <button className={styles.logoutBtn} onClick={handleLogout}>LOGOUT</button>
           </div>
         ) : (
           <>
