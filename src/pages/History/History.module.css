@@ -1,0 +1,194 @@
+/* History.module.css */
+
+.page {
+  min-height: 100vh;
+  background: var(--color-navy);
+}
+
+.section {
+  padding-top: var(--nav-height);
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2.5rem 2rem;
+}
+
+.pageHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-white);
+}
+
+.dateLabel {
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.4);
+}
+
+/* STAT CARDS */
+.statGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.statCard {
+  background: var(--color-navy-light);
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  text-align: center;
+}
+
+.statIcon { font-size: 1.8rem; }
+
+.statValue {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--color-white);
+}
+
+.statLabel {
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.45);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* BOTTOM GRID */
+.bottomGrid {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+/* TABLE */
+.tableWrap {
+  background: var(--color-navy-light);
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 1.5rem;
+  overflow-x: auto;
+}
+
+.sectionTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-white);
+  margin-bottom: 1rem;
+}
+
+.empty {
+  color: rgba(255,255,255,0.35);
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.table th {
+  text-align: left;
+  color: rgba(255,255,255,0.4);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.table td {
+  color: rgba(255,255,255,0.8);
+  padding: 0.75rem;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  vertical-align: middle;
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.table tr:hover td {
+  background: rgba(255,255,255,0.03);
+}
+
+.badge {
+  padding: 0.25rem 0.65rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+/* TOP ITEMS */
+.topItems {
+  background: var(--color-navy-light);
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 1.5rem;
+}
+
+.itemList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.itemRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0.75rem;
+  background: rgba(255,255,255,0.04);
+  border-radius: 8px;
+}
+
+.itemLeft {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.itemRank {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  min-width: 24px;
+}
+
+.itemName {
+  font-size: 0.875rem;
+  color: rgba(255,255,255,0.8);
+}
+
+.itemQty {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #4caf50;
+}
+
+/* RESPONSIVE */
+@media screen and (max-width: 900px) {
+  .statGrid { grid-template-columns: repeat(2, 1fr); }
+  .bottomGrid { grid-template-columns: 1fr; }
+}
