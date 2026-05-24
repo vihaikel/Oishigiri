@@ -1,45 +1,81 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
+import { apiFetch } from '../services/api.js';
 
 const AuthContext = createContext(null);
 
-const DUMMY_USERS = [
-  { id: 1, username: 'kasir', password: '1234', role: 'admin', name: 'Kasir' },
-  { id: 2, username: 'user',  password: '1234', role: 'user',  name: 'Customer' },
-];
-
 export const AuthProvider = ({ children }) => {
+  const [token, setToken] = useState(() => sessionStorage.getItem('oishigiri_token'));
   const [user, setUser] = useState(() => {
     const saved = sessionStorage.getItem('oishigiri_user');
     return saved ? JSON.parse(saved) : null;
   });
 
-  const login = (usernameOrEmail, password) => {
-    const found = DUMMY_USERS.find(
-      (u) => u.username === usernameOrEmail && u.password === password
-    );
-    if (found) {
-      const { password: _, ...safeUser } = found;
-      setUser(safeUser);
-      sessionStorage.setItem('oishigiri_user', JSON.stringify(safeUser));
-      return { success: true, user: safeUser };
-    }
-    return { success: false, message: 'Username atau password salah.' };
+  const isLoggedIn = !!token;
+
+  const persist = (nextToken, nextUser) => {
+    setToken(nextToken);
+    setUser(nextUser);
+    sessionStorage.setItem('oishigiri_token', nextToken);
+    sessionStorage.setItem('oishigiri_user', JSON.stringify(nextUser));
   };
 
-  const register = (name, username, email, password) => {
-    const newUser = { id: Date.now(), username, email, name, role: 'user' };
-    setUser(newUser);
-    sessionStorage.setItem('oishigiri_user', JSON.stringify(newUser));
-    return { success: true, user: newUser };
+  const login = async (usernameOrEmail, password) => {
+    try {
+      const res = await apiFetch('/auth/login', {
+        method: 'POST',
+        body: { username: usernameOrEmail, password },
+      });
+
+      const result = res.data;
+      persist(result.token, result.user);
+
+      return { success: true, user: result.user };
+    } catch (err) {
+      return { success: false, message: err.message };
+    }
   };
+
+const register = async (name, email, password, role) => {
+  try {
+    const res = await apiFetch('/auth/register', {
+      method: 'POST',
+      body: { name, email, password, role },
+    });
+
+    if (res?.data?.token && res?.data?.user) {
+      persist(res.data.token, res.data.user);
+      return { success: true, user: res.data.user };
+    }
+
+    return { success: true, user: res.data };
+  } catch (err) {
+    return { success: false, message: err.message };
+  }
+};
 
   const logout = () => {
+    setToken(null);
     setUser(null);
+    sessionStorage.removeItem('oishigiri_token');
     sessionStorage.removeItem('oishigiri_user');
   };
 
+  useEffect(() => {
+    const loadMe = async () => {
+      if (!token) return;
+      try {
+        const me = await apiFetch('/auth/me', { token });
+        setUser(me);
+        sessionStorage.setItem('oishigiri_user', JSON.stringify(me));
+      } catch (err) {
+        logout();
+      }
+    };
+    loadMe();
+  }, [token]);
+
   return (
-    <AuthContext.Provider value={{ user, login, register, logout, isLoggedIn: !!user }}>
+    <AuthContext.Provider value={{ user, token, login, register, logout, isLoggedIn }}>
       {children}
     </AuthContext.Provider>
   );

@@ -1,4 +1,4 @@
-import { Cart, CartItem, Order, OrderItem, Product } from "../models/index.js";
+import { Cart, CartItem, Order, OrderItem, Product, User } from "../models/index.js";
 import sequelize from "../config/db.js";
 
 const syncToFeOrder = (orderInstance) => {
@@ -30,11 +30,12 @@ const syncToFeOrder = (orderInstance) => {
 
 const assertAdmin = async (userId) => {
     const user = await User.findByPk(userId);
+    console.log("assertAdmin check:", { userId, dbRole: user?.role, email: user?.email, name: user?.name });
     if (!user || user.role !== "admin")
         throw new Error("Forbidden");
 };
 
-export const checkout = async (userId, address) => {
+export const checkout = async ({ userId, customerName, kasirName, payment }) => {
     return await sequelize.transaction(async (t) => {
         const cart = await Cart.findOne({ where: { userId }, transaction: t });
         if (!cart)
@@ -79,6 +80,16 @@ export const checkout = async (userId, address) => {
     });
 };
 
+export const getAllOrders = async () => {
+    const orders = await Order.findAll({
+        include: [{
+            model: OrderItem,
+        }],
+        order: [["createdAt", "ASC"]],
+    });
+    return orders.map(syncToFeOrder);
+};
+
 export const getUserOrders = async (userId) => {
     const orders = await Order.findAll({
         where: { userId },
@@ -95,9 +106,9 @@ export const getOrderDetail = async (orderId, userId) => {
     if (!user)
         throw new Error("User not found");
 
-    const isAdmin = user.role === "admin" ? { id: orderId } : { id: orderId, userId };
+    const where = user.role === "admin" ? { id: orderId } : { id: orderId, userId };
     const order = await Order.findOne({
-        where: isAdmin,
+        where,
         include: [
             {
                 model: OrderItem,
@@ -116,13 +127,18 @@ export const advanceStatus = async (orderId, userId) => {
     if (!order)
         throw new Error("Order not found");
 
+    if (order.status === "done") return syncToFeOrder(order);
+
     if (order.status === "order") {
         order.status = "proses";
         order.processedAt = new Date();
     } else if (order.status === "proses") {
         order.status = "done";
         order.doneAt = new Date();
+    } else {
+        throw new Error("Invalid order status");
     }
+
     await order.save();
 
     return syncToFeOrder(order);

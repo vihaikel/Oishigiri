@@ -1,79 +1,67 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { useAuth } from './AuthContext';
+import { advanceOrderStatus, fetchOrders, removeOrder as apiRemoveOrder } from '../services/orderApi.js';
 
 const QueueContext = createContext(null);
 
-const STORAGE_KEY = 'oishigiri_queue';
-
-const loadFromStorage = () => {
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    return saved ? JSON.parse(saved) : [];
-  } catch {
-    return [];
-  }
-};
-
-const saveToStorage = (orders) => {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
-};
-
 export const QueueProvider = ({ children }) => {
-  const [orders, setOrders] = useState(() => loadFromStorage());
+  const { token, user } = useAuth();
+  const [orders, setOrders] = useState([]);
+  const [loadingOrders, setLoadingOrders] = useState(false);
 
-  const updateOrders = (newOrders) => {
-    setOrders(newOrders);
-    saveToStorage(newOrders);
+  const isKasir = user?.role === 'admin';
+
+  const refreshOrders = async () => {
+    if (!token) {
+      setOrders([]);
+      return;
+    }
+    setLoadingOrders(true);
+    try {
+      const res = await fetchOrders({ token });
+      setOrders(res?.data || []);
+    } finally {
+      setLoadingOrders(false);
+    }
   };
 
-  const addOrder = ({ customerName, kasirName, payment, items, totalPrice }) => {
-    const current = loadFromStorage();
-    const nextNumber = current.length > 0 ? Math.max(...current.map(o => o.number)) + 1 : 1;
-    const newOrder = {
-      id: Date.now(),
-      number: nextNumber,
-      customerName,
-      kasirName,
-      payment,
-      items,
-      totalPrice,
-      status: 'order',
-      timestamps: {
-        order: new Date(),
-        proses: null,
-        done: null,
-      },
-    };
-    const updated = [...current, newOrder];
-    updateOrders(updated);
-    return newOrder;
+  useEffect(() => {
+    refreshOrders();
+  }, [token, user?.role]);
+
+  const activeOrders = useMemo(
+    () => orders.filter(o => o.status !== 'done'),
+    [orders]
+  );
+
+  const doneOrders = useMemo(
+    () => orders.filter(o => o.status === 'done'),
+    [orders]
+  );
+
+  const advanceStatus = async (orderId) => {
+    if (!token) throw new Error("Silahkan login terlebih dahulu");
+    if (!isKasir) throw new Error("Forbidden");
+
+    await advanceOrderStatus({ token, orderId });
+    await refreshOrders();
   };
 
-  const advanceStatus = (id) => {
-    const updated = orders.map((o) => {
-      if (o.id !== id) return o;
-      const next = o.status === 'order' ? 'proses' : o.status === 'proses' ? 'done' : 'done';
-      return { ...o, status: next, timestamps: { ...o.timestamps, [next]: new Date() } };
-    });
-    updateOrders(updated);
-  };
+  const removeOrder = async (orderId) => {
+    if (!token) throw new Error("Silahkan login terlebih dahulu");
+    if (!isKasir) throw new Error("Forbidden");
 
-  const removeOrder = (id) => {
-    const removed = orders.find(o => o.id === id);
-    const updated = orders
-      .filter(o => o.id !== id)
-      .map(o => o.number > removed.number ? { ...o, number: o.number - 1 } : o);
-    updateOrders(updated);
+    await apiRemoveOrder({ token, orderId });
+    await refreshOrders();
   };
-
-  const doneOrders = orders.filter(o => o.status === 'done');
-  const activeOrders = orders.filter(o => o.status !== 'done');
 
   return (
     <QueueContext.Provider value={{
       orders,
+      loadingOrders,
+      refreshOrders,
       activeOrders,
       doneOrders,
-      addOrder,
       advanceStatus,
       removeOrder,
     }}>

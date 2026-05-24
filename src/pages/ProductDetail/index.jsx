@@ -1,29 +1,85 @@
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import { useCart } from '../../context/CartContext';
 import styles from './ItemDetail.module.css';
+import { apiFetch } from '../../services/api.js';
+import { formatPrice } from '../../utils/format.js';
 
 const ItemDetail = () => {
+  const { id } = useParams();
   const { state } = useLocation();
   const navigate = useNavigate();
   const { addToCart } = useCart();
-  const product = state?.product;
+  const [product, setProduct] = useState(state?.product || null);
+  const [loading, setLoading] = useState(!state?.product);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    let active = true;
+
+    const loadDetail = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const res = await apiFetch(`/products/${id}`);
+        const p = res?.data;
+
+        if (!active) return;
+
+        const mapped = {
+          id: p.id,
+          name: p.name,
+          description: p.description || "",
+          price: formatPrice(p.price),
+          icon: p.imageUrl || null,
+        };
+        setProduct(mapped);
+      } catch (err) {
+        if (!active) return;
+        setError(err.message || "Produk tidak ditemukan");
+        setProduct(null);
+      } finally {
+        if (!active) return;
+        setLoading(false);
+      }
+    };
+
+    if (!product && id) {
+      loadDetail();
+    }
+
+    return () => { active = false; };
+  }, [id]);
+
+  const handleAddToCart = () => {
+    if (!product) return;
+    addToCart(product);
+  };
+
+  if (loading) {
+    return (
+      <div className={styles.page}>
+        <Navbar />
+        <div className={styles.notFound}>
+          <p>Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!product) {
     return (
       <div className={styles.page}>
         <Navbar />
         <div className={styles.notFound}>
-          <p>Produk tidak ditemukan.</p>
+          <p>{error || "Produk tidak ditemukan."}</p>
           <button onClick={() => navigate('/shop')} className={styles.backBtn}>← Kembali ke Shop</button>
         </div>
       </div>
     );
   }
-
-  const handleAddToCart = () => {
-    addToCart(product); // ← drawer otomatis terbuka
-  };
 
   return (
     <div className={styles.page}>

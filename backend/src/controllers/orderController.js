@@ -28,23 +28,30 @@ export const checkout = async (req, res) => {
 };
 
 export const listOrders = async (req, res) => {
-    try {
-        const isKasir = req.user?.role === "admin";
-        const data = isKasir ? await orderService.getAllOrders(req.user.id) : await orderService.getUserOrders(req.user.id);
-        return res.status(200).json({ data });
-    } catch (error) {
-        return res.status(500).json({ message: error.message });
-    }
+  try {
+    const isKasir = req.user?.role === "admin";
+    const data = isKasir
+      ? await orderService.getAllOrders()     // <-- semua
+      : await orderService.getUserOrders(req.user.id); // <-- milik user
+
+    return res.status(200).json({ data });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
 };
 
 export const getOrderDetail = async (req, res) => {
-    const { orderId } = req.params;
-    try {
-        const order = await orderService.getOrderDetail(orderId, req.user.id);
-        return res.status(200).json({ data: order });
-    } catch (error) {
-        return res.status(404).json({ message: error.message });
-    }
+  const { orderId } = req.params;
+  try {
+    const isKasir = req.user?.role === "admin";
+    const order = await orderService.getOrderDetail(
+      orderId,
+      isKasir ? null : req.user.id
+    );
+    return res.status(200).json({ data: order });
+  } catch (error) {
+    return res.status(404).json({ message: error.message });
+  }
 };
 
 export const advanceStatus = async (req, res) => {
