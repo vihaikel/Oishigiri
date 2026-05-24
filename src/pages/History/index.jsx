@@ -1,3 +1,4 @@
+import { useEffect, useMemo } from 'react';
 import { Navigate } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import { useAuth } from '../../context/AuthContext';
@@ -18,27 +19,47 @@ const STATUS_COLOR = { order: '#e63946', proses: '#ffc107', done: '#4caf50' };
 
 const History = () => {
   const { user } = useAuth();
-  const { orders } = useQueue();
+  const { orders, refreshOrders, loadingOrders } = useQueue();
 
-  if (user?.role !== 'admin') return <Navigate to="/" replace />;
+  const isAdmin = user?.role === 'admin';
 
-  const today = new Date().toDateString();
-  const todayOrders = orders.filter(o =>
-    new Date(o.timestamps.order).toDateString() === today
-  );
+  useEffect(() => {
+    if (!isAdmin) return;
+    refreshOrders();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAdmin]);
 
-  const totalPesanan   = todayOrders.length;
-  const totalPemasukan = todayOrders.reduce((sum, o) => sum + o.totalPrice, 0);
-  const totalPelanggan = new Set(todayOrders.map(o => o.customerName)).size;
-  const totalSelesai   = todayOrders.filter(o => o.status === 'done').length;
+  const todayOrders = useMemo(() => {
+    if (!isAdmin) return [];
 
-  const itemCount = {};
-  todayOrders.forEach(o => {
-    o.items.forEach(item => {
-      itemCount[item.name] = (itemCount[item.name] || 0) + item.qty;
+    const today = new Date().toDateString();
+    return (orders || []).filter((o) => {
+      const orderDate = o?.timestamps?.order;
+      if (!orderDate) return false;
+      return new Date(orderDate).toDateString() === today;
     });
-  });
-  const topItems = Object.entries(itemCount).sort((a, b) => b[1] - a[1]);
+  }, [orders, isAdmin]);
+
+  const totalPesanan = todayOrders.length;
+  const totalPemasukan = todayOrders.reduce((sum, o) => sum + Number(o.totalPrice || 0), 0);
+  const totalPelanggan = new Set(todayOrders.map((o) => o.customerName)).size;
+  const totalSelesai = todayOrders.filter((o) => o.status === 'done').length;
+
+  const topItems = useMemo(() => {
+    if (!isAdmin) return [];
+
+    const itemCount = {};
+    todayOrders.forEach((o) => {
+      const items = Array.isArray(o.items) ? o.items : [];
+      items.forEach((item) => {
+        itemCount[item.name] = (itemCount[item.name] || 0) + Number(item.qty || 0);
+      });
+    });
+    return Object.entries(itemCount).sort((a, b) => b[1] - a[1]);
+  }, [todayOrders, isAdmin]);
+
+  // return guard taruh di bawah hooks
+  if (!isAdmin) return <Navigate to="/" replace />;
 
   return (
     <div className={styles.page}>
@@ -51,7 +72,6 @@ const History = () => {
             <span className={styles.dateLabel}>{formatDate(new Date())}</span>
           </div>
 
-          {/* STAT CARDS */}
           <div className={styles.statGrid}>
             <div className={styles.statCard}>
               <span className={styles.statIcon}>🧾</span>
@@ -76,10 +96,12 @@ const History = () => {
           </div>
 
           <div className={styles.bottomGrid}>
-            {/* LIST PESANAN */}
             <div className={styles.tableWrap}>
               <h2 className={styles.sectionTitle}>Pesanan Hari Ini</h2>
-              {todayOrders.length === 0 ? (
+
+              {loadingOrders ? (
+                <div className={styles.empty}>Loading...</div>
+              ) : todayOrders.length === 0 ? (
                 <div className={styles.empty}>Belum ada pesanan hari ini.</div>
               ) : (
                 <table className={styles.table}>
@@ -101,16 +123,19 @@ const History = () => {
                         <td>#{order.number}</td>
                         <td>{order.customerName}</td>
                         <td>{order.kasirName || '-'}</td>
-                        <td>{order.items.map(i => `${i.name} x${i.qty}`).join(', ')}</td>
-                        <td>Rp {order.totalPrice.toLocaleString('id-ID')}</td>
+                        <td>{(order.items || []).map((i) => `${i.name} x${i.qty}`).join(', ')}</td>
+                        <td>Rp {Number(order.totalPrice || 0).toLocaleString('id-ID')}</td>
                         <td>{order.payment || '-'}</td>
-                        <td>{formatTime(order.timestamps.order)}</td>
+                        <td>{formatTime(order?.timestamps?.order)}</td>
                         <td>
-                          <span className={styles.badge} style={{
-                            background: STATUS_COLOR[order.status] + '22',
-                            color: STATUS_COLOR[order.status]
-                          }}>
-                            {STATUS_LABEL[order.status]}
+                          <span
+                            className={styles.badge}
+                            style={{
+                              background: (STATUS_COLOR[order.status] || '#999') + '22',
+                              color: STATUS_COLOR[order.status] || '#999',
+                            }}
+                          >
+                            {STATUS_LABEL[order.status] || order.status}
                           </span>
                         </td>
                       </tr>
@@ -120,10 +145,12 @@ const History = () => {
               )}
             </div>
 
-            {/* ITEM TERLARIS */}
             <div className={styles.topItems}>
               <h2 className={styles.sectionTitle}>Item Terlaris</h2>
-              {topItems.length === 0 ? (
+
+              {loadingOrders ? (
+                <div className={styles.empty}>Loading...</div>
+              ) : topItems.length === 0 ? (
                 <div className={styles.empty}>Belum ada data.</div>
               ) : (
                 <div className={styles.itemList}>

@@ -18,9 +18,14 @@ export const addItem = async (req, res) => {
     try {
         const item = await cartService.addItemToCart(req.user.id, productId, quantity);
         res.status(201).json({ message: "Item berhasil ditambahkan ke keranjang", data: item });
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
+        } catch (err) {
+          const msg = err.message || "Error";
+          const code =
+            msg.includes("wajib") || msg.includes("quantity") || msg.includes("Produk tidak ditemukan")
+              ? 400
+              : 500;
+          res.status(code).json({ message: msg });
+        }
 };
 
 export const removeItem = async (req, res) => {

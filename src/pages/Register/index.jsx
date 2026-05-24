@@ -16,23 +16,28 @@ const Register = () => {
     setForm({ ...form, [e.target.id]: e.target.value });
   };
 
-  const handleRegister = async (e) => {
-    e.preventDefault();
-    setError('');
-    const { name, username, email, password } = form;
-    if (!name || !username || !email || !password) {
-      setError('Semua field wajib diisi.');
-      return;
-    }
-    setLoading(true);
-    const result = register(name, username, email, password);
-    if (result.success) {
-      navigate('/', { replace: true });
-    } else {
-      setError(result.message);
-      setLoading(false);
-    }
-  };
+const handleRegister = async (e) => {
+  e.preventDefault();
+  setError('');
+
+  const { name, username, email, password } = form;
+
+  if (!name || !username || !email || !password) {
+    setError('Semua field wajib diisi.');
+    return;
+  }
+
+  setLoading(true);
+
+  const result = await register(username, email, password);
+
+  if (result.success) {
+    navigate('/login', { replace: true });
+  } else {
+    setError(result.message);
+    setLoading(false);
+  }
+};
 
   return (
     <div className={styles.page}>

@@ -1,25 +1,23 @@
 import { registerUser, loginUser, getUserById } from "../services/userService.js";
 
 export const register = async (req, res) => {
-    try {
-        const { name, email, password, role } = req.body;
+  try {
+    const { name, email, password, role } = req.body;
 
-        if (!name || !email || !password) {
-            return res.status(400).json({
-                message: "name, email dan password wajib diisi",
-            });
-        }
-
-        const user = await registerUser({ name, email, password, role });
-
-        return res.status(201).json({
-            message: "Register berhasil",
-            data: user,
-        })
-    } catch (err) {
-        const status = err.message.includes("Email sudah terdaftar") ? 409 : 500;
-        return res.status(status).json({ message: err.message });
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: "name, email dan password wajib diisi" });
     }
+
+    const result = await registerUser({ name, email, password, role });
+
+    return res.status(201).json({
+      message: "Register berhasil",
+      data: result,
+    });
+  } catch (err) {
+    const status = err.message.includes("Email sudah terdaftar") ? 409 : 500;
+    return res.status(status).json({ message: err.message });
+  }
 };
 
 export const login = async (req, res) => {

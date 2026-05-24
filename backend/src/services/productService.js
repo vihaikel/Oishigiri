@@ -1,20 +1,17 @@
 import { Product } from "../models/index.js";
 import { Op } from "sequelize";
 
-export const getAllProducts = async (query) => {
-    const options = {};
+export const getAllProducts = async (q) => {
+  const options = {};
 
-    if (query.search) {
-        options.where = {
-            name: {
-                [Op.iLike]: `%${query}%`
-            },
-        };
-    }
+  if (q && String(q).trim() !== "") {
+    options.where = {
+      name: { [Op.iLike]: `%${q}%` },
+    };
+  }
 
-    const products = await Product.findAll(options);
-    return products;
-}
+  return await Product.findAll(options);
+};
 
 export const getProductById = async (id) => {
     const product = await Product.findByPk(id);

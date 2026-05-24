@@ -4,54 +4,54 @@ import Navbar from '../../components/Navbar';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
 import { useQueue } from '../../context/QueueContext';
+import { checkoutOrder } from '../../services/orderApi.js';
 import styles from './Checkout.module.css';
 
 const KASIR_LIST = ['Stevi', 'Yoan', 'Fahreza', 'Aldo'];
 
 const Checkout = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
-  const { cartItems, totalPrice, closeCart, clearCart } = useCart();
-  const { addOrder, orders } = useQueue();
+  const { token, user } = useAuth();
+  const { cartItems, totalPrice, refreshCart, closeCart, clearCart } = useCart();
+  const { refreshOrders } = useQueue();
 
   const isKasir = user?.role === 'admin';
 
   const [customerName, setCustomerName] = useState('');
   const [kasirName, setKasirName] = useState('');
   const [payment, setPayment] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const nextNumber = orders.length > 0 ? Math.max(...orders.map(o => o.number)) + 1 : 1;
+  const handleCheckout = async () => {
+    if (!token) return alert("Silahkan login terlebih dahulu");
+    if (!payment) return alert("Mohon pilih metode pembayaran!");
 
-  const handleSubmit = () => {
-    // Validasi kasir
-    if (isKasir && !customerName.trim()) {
-      alert('Mohon isi nama pelanggan!');
-      return;
-    }
-    if (isKasir && !kasirName) {
-      alert('Mohon pilih kasir!');
-      return;
-    }
-    if (!payment) {
-      alert('Mohon pilih metode pembayaran!');
-      return;
-    }
-    if (cartItems.length === 0) {
-      alert('Keranjang kosong!');
-      return;
+    if (cartItems.length === 0) return alert("Keranjang kosong!");
+
+    if (isKasir) {
+      if (!customerName.trim()) return alert("Mohon isi nama pelanggan!");
+      if (!kasirName) return alert("Mohon pilih kasir!");
     }
 
-    addOrder({
-      customerName: isKasir ? customerName.trim() : user?.name,
-      kasirName: isKasir ? kasirName : '-',
-      payment,
-      items: cartItems,
-      totalPrice,
-    });
+    try {
+      setLoading(true);
 
-    closeCart();
-    clearCart();
-    navigate('/antrian');
+      await checkoutOrder({
+        token,
+        customerName: isKasir ? customerName.trim() : undefined,
+        kasirName: isKasir ? kasirName : undefined,
+        payment,
+      });
+
+      await refreshCart();
+      await refreshOrders();
+      closeCart();
+      navigate('/antrian');
+    } catch (error) {
+      alert(error.message)
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -64,10 +64,6 @@ const Checkout = () => {
 
           <div className={styles.card}>
             {/* Nomor Antrian */}
-            <div className={styles.queueNumber}>
-              <span className={styles.queueLabel}>Nomor Antrian</span>
-              <span className={styles.queueValue}>#{nextNumber}</span>
-            </div>
 
             <div className={styles.form}>
               {isKasir ? (
@@ -141,7 +137,7 @@ const Checkout = () => {
               </div>
             </div>
 
-            <button className={styles.submitBtn} onClick={handleSubmit}>
+            <button className={styles.submitBtn} onClick={handleCheckout} disabled={loading}>
               Konfirmasi Pesanan
             </button>
           </div>

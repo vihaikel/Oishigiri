@@ -1,3 +1,4 @@
+import cors from 'cors';
 import express from 'express';
 import { sequelize } from './src/models/index.js';
 import userRoutes from './src/routes/userRoutes.js';
@@ -7,10 +8,24 @@ import orderRoutes from './src/routes/orderRoutes.js';
 
 const app = express();
 
+const allowedOrigins = (process.env.CORS_ORIGINS || "http://localhost:3000")
+  .split(",")
+  .map(s => s.trim());
+
+app.use(cors({
+  origin: (origin, cb) => {
+    if (!origin) return cb(null, true);
+    if (allowedOrigins.includes(origin)) return cb(null, true);
+    return cb(new Error(`CORS blocked for origin: ${origin}`));
+  },
+  credentials: true,
+}));
+
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-sequelize.sync()
+sequelize.sync({ alter: true })
   .then(() => {
     console.log('Synced db.');
   })

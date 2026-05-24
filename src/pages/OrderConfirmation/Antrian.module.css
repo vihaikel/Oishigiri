@@ -271,6 +271,46 @@
   transition: background 0.2s;
 }
 
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-left: auto; /* supaya tombol di kanan dalam header */
+}
+
+.processBtn:disabled,
+.doneBtn:disabled,
+.takenBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.processBtn,
+.doneBtn {
+  border: 0;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.processBtn {
+  background: rgba(255, 193, 7, 0.18);
+  color: #ffc107;
+  border: 1px solid rgba(255, 193, 7, 0.35);
+}
+
+.doneBtn {
+  background: rgba(76, 175, 80, 0.18);
+  color: #4caf50;
+  border: 1px solid rgba(76, 175, 80, 0.35);
+}
+
+.processBtn:hover,
+.doneBtn:hover {
+  filter: brightness(1.05);
+}
+
 .takenBtn:hover { background: #43a047; }
 
 /* RESPONSIVE */
